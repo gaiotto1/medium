@@ -34,7 +34,7 @@ const FooterPost = ({ category, disabledSave, disabledEdit, idPost, userId }) =>
   const postSaved = () => {
     const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
   
-    return bookmarks.find(bookmark => bookmark.id === idPost);
+    return bookmarks.find(bookmark => bookmark.id === idPost && bookmark.authorSave === userId);
   }
 
   return (

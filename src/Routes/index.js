@@ -27,7 +27,11 @@ export function Router () {
 
   return (
     <Routes>
-      { user ? (
+      <>
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </>
+      { user && (
         <>
           <Route path="/" element={<DefaultLayout />}>
             <Route path="/" exact element={<Home />} />
@@ -37,11 +41,6 @@ export function Router () {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/stories-draft" element={<StoriesDraft />} />
           </Route>
-        </>
-      ) : (
-        <>
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
         </>
       )}
     </Routes>

@@ -16,7 +16,7 @@ const SignUp = () => {
       .createUserWithEmailAndPassword(email, password)
       .then(() => { 
         openSnackbar('User created successfully.')
-        navigate('/');
+        navigate('/signin');
       })
       .catch(error => {
         const errorCode = error.code;

@@ -6,8 +6,10 @@ import { Container, ContainerPost, ContainerButtonLoadMore } from './styles';
 import PostLarge from '../../components/PostLarge';
 import Post from '../../components/Post';
 import Categories from '../../components/Categories';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const [posts, setPosts] = useState([]);
   const [postLarge, setPostLarge] = useState(null);
@@ -24,7 +26,6 @@ const Home = () => {
 
       setPostLarge(postsFiltered[0]);
       const postsPaginated = postsFiltered.slice(1, (page * 3) + 1);
-      // const postsPaginated = postsFiltered.slice(0, page * 3);
 
       setPosts(postsPaginated);
     } else {
@@ -33,8 +34,6 @@ const Home = () => {
       setPostLarge(postsFiltered[0]);
 
       const postsPaginated = postsFiltered.slice(1, (page * 3) + 1);
-
-      // const postsPaginated = postsFiltered.slice(0, page * 3);
 
       setPosts(postsPaginated);
     }
@@ -60,7 +59,6 @@ const Home = () => {
 
     setPostLarge(postsFiltered[0]);
     setPosts(postsFiltered.slice(1, 4));
-    // setPosts(postsFiltered.slice(0, 3));
   }
 
   useEffect(() => {
@@ -70,13 +68,15 @@ const Home = () => {
     setPostLarge(postsFiltered[0]);
 
     setPosts(postsFiltered.slice(1, 4));
-
-    // setPosts(postsFiltered.slice(0, 3));
   }, []);
 
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged(user => {
       setUserId(user.uid);
+
+      if (!user.uid) {
+        navigate('/signin');
+      }
     });
 
     return subscriber;
