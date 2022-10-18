@@ -11,7 +11,7 @@ Clone the project:
   git clone https://github.com/gaiotto1/medium.git
 ```
 
-Install as dependencies:
+Install dependencies:
 
 ```bash
   yarn
