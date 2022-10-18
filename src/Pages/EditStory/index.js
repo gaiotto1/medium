@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { useSnackbar } from 'react-simple-snackbar';
-import { auth } from '../../services/firebase';
 
 import { Container, Wrapper } from './styles';
 
 import Title from '../../components/Title';
-import { useEffect } from 'react';
 
-const NewStory = () => {
+const EditStory = () => {
   const [openSnackbar] = useSnackbar();
-  const [userId, setUserId] = useState(true);
   const [title, setTitle] = useState('');
   const [smallDescription, setSmallDescription] = useState('');
   const [image, setImage] = useState('');
@@ -18,40 +16,53 @@ const NewStory = () => {
   const [status, setStatus] = useState('draft');
   const [disabled, setDisabled] = useState(false);
 
-  useEffect(() => {
-    const subscriber = auth.onAuthStateChanged(user => {
-      setUserId(user.uid);
-    });
+  const { postId } = useParams();
 
-    return subscriber;
-  }, []);
-  
-  async function handleCreateNewStory() {
+  const handleEditStory = () => {
     setDisabled(true);
-    const author = userId;
+    let posts = JSON.parse(localStorage.getItem('posts')) || [];
+    const postFiltered = posts.find(post => post.id == postId);
+    
+    if (postFiltered) {
+      const postUpdated = {
+        ...postFiltered,
+        title,
+        smallDescription,
+        image,
+        category,
+        content,
+        status,
+      };
+  
+      posts = posts.map(post => post.id == postId ? postUpdated : post);
+      localStorage.setItem('posts', JSON.stringify(posts));
+      openSnackbar('Post updated successfully!');
+    }
+  };
 
+  const setFields = () => {
     const posts = JSON.parse(localStorage.getItem('posts')) || [];
+    const postFiltered = posts.find(post => post.id == postId);
 
-    posts.push({
-      id: new Date().getTime(), 
-      title,
-      smallDescription,
-      image,
-      category,
-      content,
-      status,
-      author,
-    });
+    if (postFiltered) {
+      const { title, smallDescription, image, category, content, status } = postFiltered;
+      setTitle(title);
+      setSmallDescription(smallDescription);
+      setImage(image);
+      setCategory(category);
+      setContent(content);
+      setStatus(status);
+    }
+  };
 
-    localStorage.setItem('posts', JSON.stringify(posts));
-    openSnackbar('Story created successfully.');
-    setDisabled(false);
-  }
-
+  useEffect(() => {
+    setFields();
+  }, [postId]);
+  
   return (
     <Container>
       <Title title="Tell your story" />
-      <Wrapper onSubmit={(e) => { e.preventDefault(); handleCreateNewStory(); }}>
+      <Wrapper onSubmit={(e) => { e.preventDefault(); handleEditStory(); }}>
         <div>
           <label>Title</label>
           <input
@@ -77,7 +88,7 @@ const NewStory = () => {
         </div>
         
         <div>
-          <label>Image url</label>
+          <label>Image</label>
           <input
             name='image'
             type="text"
@@ -135,4 +146,4 @@ const NewStory = () => {
   )
 }
 
-export default NewStory;
+export default EditStory;
