@@ -83,7 +83,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Container>
+    <Container data-testid="ContainerHome">
       {postLarge && (
         <PostLarge post={postLarge} disabledSave={userIsAuthorPost(postLarge.author)} disabledEdit={!userIsAuthorPost(postLarge.author)} userId={userId} />  
       )}

@@ -12,7 +12,6 @@ export const Container = styled.div`
 
   display: flex;
   align-items: flex-start;
-  // justify-content: space-around;
   flex-wrap: wrap;
 
   p {
@@ -24,7 +23,7 @@ export const Container = styled.div`
   }
 `;
 
-export const Item = styled.div`
+export const Item = styled.button`
   position: relative;
   border: 1px solid #757575;
   padding: 4px 14px;
@@ -32,6 +31,7 @@ export const Item = styled.div`
   font-size: 16px;
   margin: 0px 10px 10px 0px;
   cursor: pointer;
+  background-color: transparent;
 
   ${props => props.selected && `
     background-color: #292929;

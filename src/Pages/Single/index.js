@@ -15,10 +15,17 @@ const Single = () => {
   return (
     <Container>
       <Wrapper>
-        <img src={post.image} alt={post.title} />
-        <h1>{post.title}</h1>
-        <h2>{post.smallDescription}</h2>
-        <p>{post.content}</p>
+        {post ? (
+          <>
+            <img src={post.image} alt={post.title} />
+            <h1>{post.title}</h1>
+            <p>{post.smallDescription}</p>
+            <p>{post.content}</p>
+          </>
+
+        ) : (
+          <h1>Post not found</h1>
+        )}
       </Wrapper>
     </Container>
   )

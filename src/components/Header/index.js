@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { auth } from '../../services/firebase';
+import { auth, signOut } from '../../services/firebase';
 
 import { ContainerHeader, Logo, ContainerNav, Logout } from './styles';
 
@@ -15,32 +15,33 @@ const Header = () => {
   const navigate = useNavigate();
 
   function handleLogout() {
-    auth.signOut();
-    navigate('/signin');
+    signOut(auth).then(() => {
+      navigate('/signin');
+    });
   }
 
   return (
     <ContainerHeader>
       <Logo>
-        <img src={logoImg} alt='logo' />
+        <img data-testid="logo" src={logoImg} alt='logo' />
       </Logo>
 
       <ContainerNav>
-        <a onClick={() => navigate("/")}>
+        <a onClick={() => navigate("/")} data-testid="home">
           <img src={home} alt='home' />
         </a>
 
-        <a onClick={() => navigate("/bookmarks")}>
+        <a onClick={() => navigate("/bookmarks")} data-testid="bookmarks">
           <img src={bookmark} alt='bookmarks' />
         </a>
 
-        <a onClick={() => navigate("/stories-draft")}>
+        <a onClick={() => navigate("/stories-draft")} data-testid="stories-draft">
           <img src={stories} alt='stories' />
         </a>
 
         <span></span>
 
-        <a onClick={() => navigate("/new-story")}>
+        <a onClick={() => navigate("/new-story")} data-testid="new-story">
           <img src={write} alt='write' />
         </a>
       </ContainerNav>
@@ -49,7 +50,7 @@ const Header = () => {
         <div></div>
   </ContainerAvatar> */}
 
-      <Logout onClick={handleLogout}>Sign out</Logout>
+      <Logout onClick={handleLogout} data-testid="sign-out">Sign out</Logout>
     </ContainerHeader>
   );
 };

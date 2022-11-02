@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { auth } from '../../services/firebase';
+import { auth, createUserWithEmailAndPassword } from '../../services/firebase';
 import { useSnackbar } from 'react-simple-snackbar';
 
 import { Container, Wrapper } from './styles';
@@ -11,26 +11,24 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function handleCreateUserAccount() {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => { 
-        openSnackbar('User created successfully.')
-        navigate('/signin');
-      })
-      .catch(error => {
-        const errorCode = error.code;
+  function handleSignUp() {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      navigate('/signin');
+    })
+    .catch((error) => {
+      if (error.code === 'auth/weak-password') {
+        openSnackbar(' Password should be at least 6 characters');
+      }
 
-        if (errorCode === 'auth/weak-password') {
-          return openSnackbar('The password must be at least 6 characters long.');
-        }
-        
-        if (errorCode === 'auth/email-already-in-use') {
-          return openSnackbar('This email is already being used.');
-        }
+      if (error.code === 'auth/email-already-in-use') {
+        openSnackbar('Email already in use');
+      }
 
-        return openSnackbar('There was an error creating the account.');
-      });
+      if (error.code === 'auth/invalid-email') {
+        openSnackbar('Invalid email');
+      }
+    });
   }
 
   return (
@@ -42,6 +40,7 @@ const SignUp = () => {
           <div>
             <label>Email Address</label>
             <input
+              data-testid="email"
               type="text"
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
@@ -51,13 +50,14 @@ const SignUp = () => {
           <div>
             <label>Password</label>
             <input
+              data-testid="password"
               type="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <a type="button" onClick={() => navigate('/signin')}>Sign in</a>
-          <button type="button" onClick={handleCreateUserAccount}>Sign up</button>
+          <a onClick={() => navigate('/signin')}>Sign in</a>
+          <button data-testid="sign-in-button" type="button" onClick={handleSignUp}>Sign up</button>
         </form>
       </Wrapper>
     </Container>
